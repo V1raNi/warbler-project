@@ -65,6 +65,11 @@ exports.signup = async function(req, res, next) {
       // default mongoose error is ugly, so we provide a nice error message for front end devs
       err.message = 'Sorry, that username and/or email is already taken';
     }
+    // add a wrapper for 'required' error
+    if (err.errors) {
+      const errKeys = Object.keys(err.errors);
+      err.message = `Please fill in the required fields: ${errKeys.join(', ')}`;
+    }
     // no matter what we're always going to return next with status 400 and some error message
     return next({
       status: 400,
